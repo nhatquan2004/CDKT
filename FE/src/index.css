@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables — Emerald Forest Design System */
+:root {
+  --color-primary: #236640;
+  --color-primary-dark: #1A4D30;
+  --color-primary-8: rgba(35, 102, 64, 0.08);
+  --color-primary-15: rgba(35, 102, 64, 0.15);
+  --color-primary-25: rgba(35, 102, 64, 0.25);
+  --color-accent: #C8A951;
+  --color-accent-20: rgba(200, 169, 81, 0.20);
+  --color-neutral: #F5FAF6;
+  --color-text-dark: #0F2B1A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background-color: var(--color-neutral);
+  color: var(--color-text-dark);
+  -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-primary-8); }
+::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 3px; }
+
+/* Pin pulse animation */
+@keyframes mapPinPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 var(--color-accent-20); }
+  50%       { transform: scale(1.18); box-shadow: 0 0 0 14px transparent; }
+}
+@keyframes mapPinGlow {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 0; transform: scale(2.5); }
+}
+
+.map-pin-active { animation: mapPinPulse 2s ease-in-out infinite; }
+.map-pin-glow   { animation: mapPinGlow 2s ease-in-out infinite; }
+
+/* Slide-up panel */
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.panel-slide-up { animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.fade-in { animation: fadeIn 0.3s ease-out; }

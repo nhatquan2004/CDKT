@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment variables (Bảo mật credentials, DB URI, JWT secret, Cloudinary key)
+.env
+.env.local
+.env.*.local
+
+# Local uploads & temporary files
+uploads/
+*.tmp
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
