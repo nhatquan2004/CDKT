@@ -6,7 +6,7 @@ import api from '../../services/api';
 
 const MapCheckinPage = () => {
   const navigate = useNavigate();
-  const mapImage = '/Screenshot 2026-09-14 205627.png';
+  const mapImage = encodeURI('/MÀN 2.png');
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState(null);

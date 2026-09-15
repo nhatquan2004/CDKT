@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import TeamButton from '../../components/player/TeamButton';
 import { useTeams } from '../../context/TeamContext';
 
-const POSTER_BG = '/789216604_1493878392773215_2787463602002314415_n.jpg';
+const POSTER_BG = encodeURI('/NỀN MÀN 1.png');
 
 const SelectTeamPage = () => {
   const navigate = useNavigate();
