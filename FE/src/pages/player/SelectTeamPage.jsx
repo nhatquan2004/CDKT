@@ -45,7 +45,7 @@ const SelectTeamPage = () => {
       >
 
         {/* Toàn bộ nội dung đẩy lên gần chạm biển gỗ READY? và không che cờ Chợ Bến Thành */}
-        <div className="relative z-10 flex flex-col items-center gap-2 sm:gap-3" style={{ marginTop: '17%' }}>
+        <div className="relative z-10 flex flex-col items-center gap-0" style={{ marginTop: '14%' }}>
 
           {/* Tiêu đề RẤT nhỏ — chỉ để nhận diện, không cạnh tranh với banner */}
           <h1 className="font-body font-semibold text-[11px] sm:text-xs text-[#144728]/80 tracking-[0.25em] uppercase text-center">
@@ -53,11 +53,13 @@ const SelectTeamPage = () => {
           </h1>
 
           {/* Banner vệt sơn — to rõ, căn giữa, là điểm nhấn chính */}
-          <img
-            src="/banner_checkin.png"
-            alt="Nộp Minh Chứng Check In"
-            className="w-full max-w-[280px] sm:max-w-[360px] h-auto drop-shadow-[0_4px_16px_rgba(35,102,64,0.30)] select-none pointer-events-none"
-          />
+          <div className="pb-4 sm:pb-5">
+            <img
+              src="/banner_checkin.png"
+              alt="Nộp Minh Chứng Check In"
+              className="w-full max-w-[280px] sm:max-w-[360px] h-auto drop-shadow-[0_4px_16px_rgba(35,102,64,0.30)] select-none pointer-events-none"
+            />
+          </div>
 
           {/* Grid 10 Team */}
           <div className="w-full">
