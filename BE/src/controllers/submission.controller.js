@@ -5,10 +5,10 @@ const Location = require('../models/Location');
 // Team nộp ảnh minh chứng
 const createSubmission = async (req, res) => {
   try {
-    const { teamId, locationId } = req.body;
+    const { teamId, locationId, imageUrl } = req.body;
 
-    // Kiểm tra có file ảnh không
-    if (!req.file) {
+    // Kiểm tra có URL ảnh không
+    if (!imageUrl) {
       return res.status(400).json({ message: 'Vui lòng tải lên ảnh minh chứng.' });
     }
 
@@ -23,8 +23,6 @@ const createSubmission = async (req, res) => {
     if (!location) {
       return res.status(404).json({ message: 'Không tìm thấy điểm check-in.' });
     }
-
-    const imageUrl = req.file.path || req.file.secure_url;
 
     const submission = await Submission.create({
       team: teamId,

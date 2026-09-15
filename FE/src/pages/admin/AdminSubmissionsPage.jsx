@@ -15,17 +15,37 @@ const AdminSubmissionsPage = () => {
 
   useEffect(() => {
     fetchSubmissions();
+
+    // Polling mỗi 5s — chỉ gọi API khi tab đang được hiển thị, silent=true để không flash spinner
+    const intervalId = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchSubmissions(true);
+      }
+    }, 5000);
+
+    // Refresh ngay khi BTC quay lại tab
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchSubmissions(true);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, []);
 
-  const fetchSubmissions = async () => {
-    setLoading(true);
+  const fetchSubmissions = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const { data } = await api.get('/submissions');
       setSubmissions(data);
     } catch {
-      toast.error('Không thể tải danh sách minh chứng!');
+      if (!silent) toast.error('Không thể tải danh sách minh chứng!');
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 

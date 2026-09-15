@@ -8,6 +8,7 @@ const teamRoutes = require('./src/routes/team.routes');
 const locationRoutes = require('./src/routes/location.routes');
 const submissionRoutes = require('./src/routes/submission.routes');
 const adminRoutes = require('./src/routes/admin.routes');
+const cloudinaryRoutes = require('./src/routes/cloudinary.routes');
 const seedData = require('./src/seed');
 
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api/teams', teamRoutes);
 app.use('/api/locations', locationRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/cloudinary', cloudinaryRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

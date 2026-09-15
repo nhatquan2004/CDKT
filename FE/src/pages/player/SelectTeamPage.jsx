@@ -1,30 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TeamButton from '../../components/player/TeamButton';
-import api from '../../services/api';
+import { useTeams } from '../../context/TeamContext';
 
 const POSTER_BG = '/789216604_1493878392773215_2787463602002314415_n.jpg';
 
 const SelectTeamPage = () => {
   const navigate = useNavigate();
-  const [teams, setTeams] = useState([]);
+  const { teams, teamsLoading } = useTeams();
   const [selectedTeam, setSelectedTeam] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        const { data } = await api.get('/teams');
-        setTeams(data);
-      } catch (err) {
-        setError('Không thể tải danh sách team. Vui lòng thử lại!');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTeams();
-
     const savedTeamId = localStorage.getItem('selectedTeamId');
     const savedTeamName = localStorage.getItem('selectedTeamName');
     if (savedTeamId && savedTeamName) {
@@ -96,14 +82,18 @@ const SelectTeamPage = () => {
 
           {/* Grid danh sách 10 Teams - tự co giãn theo điện thoại */}
           <div className="flex-1 my-1 sm:my-2">
-            {loading ? (
-              <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 py-10 sm:py-16">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 border-4 border-[#236640] border-t-transparent rounded-full animate-spin" />
-                <p className="text-[#0F2B1A] font-semibold text-xs sm:text-sm">Đang tải danh sách team...</p>
+            {teamsLoading ? (
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-2 sm:mb-4">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-12 sm:h-14 rounded-2xl bg-[#236640]/10 animate-pulse"
+                  />
+                ))}
               </div>
-            ) : error ? (
+            ) : teams.length === 0 ? (
               <div className="bg-white/90 border border-red-300 rounded-2xl p-4 sm:p-6 text-center shadow-md">
-                <p className="text-red-700 font-bold text-xs sm:text-sm">{error}</p>
+                <p className="text-red-700 font-bold text-xs sm:text-sm">Không thể tải danh sách team. Vui lòng thử lại!</p>
                 <button
                   onClick={() => window.location.reload()}
                   className="mt-2 text-xs sm:text-sm underline text-[#236640] font-bold"

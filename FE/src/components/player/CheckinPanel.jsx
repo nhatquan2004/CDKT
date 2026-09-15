@@ -45,13 +45,31 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
 
     setLoading(true);
     try {
-      const formData = new FormData();
-      formData.append('teamId', teamId);
-      formData.append('locationId', location._id);
-      formData.append('image', imageFile);
-      await api.post('/submissions', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      // Bước 1: Xin chữ ký từ backend
+      const { data: sigData } = await api.post('/cloudinary/signature');
+
+      // Bước 2: Upload ảnh thẳng lên Cloudinary (không qua Railway)
+      const uploadForm = new FormData();
+      uploadForm.append('file', imageFile);
+      uploadForm.append('api_key', sigData.apiKey);
+      uploadForm.append('timestamp', sigData.timestamp);
+      uploadForm.append('signature', sigData.signature);
+      uploadForm.append('folder', sigData.folder);
+
+      const uploadRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`,
+        { method: 'POST', body: uploadForm }
+      );
+      if (!uploadRes.ok) throw new Error('Upload ảnh thất bại');
+      const { secure_url: imageUrl } = await uploadRes.json();
+
+      // Bước 3: Gửi URL về backend để lưu submission
+      await api.post('/submissions', {
+        teamId,
+        locationId: location._id,
+        imageUrl,
       });
+
       toast.success('Đã nộp minh chứng thành công!', { duration: 4000 });
       onSuccess(location._id);
       onClose();
