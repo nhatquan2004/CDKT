@@ -43,36 +43,21 @@ const SelectTeamPage = () => {
           backgroundImage: `url('${POSTER_BG}')`,
         }}
       >
-        {/* Lớp phủ mờ hơn một chút (dịu mắt, làm mờ ảnh nền nhẹ nhàng) */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'linear-gradient(180deg, rgba(245,250,246,0.72) 0%, rgba(245,250,246,0.62) 50%, rgba(245,250,246,0.78) 100%)',
-          }}
-        />
 
         {/* Nội dung bên trong khung - co giãn kích thước theo màn hình */}
         <div className="relative z-10 flex flex-col justify-between flex-1 h-full">
           {/* Header */}
-          <header className="text-center mb-3 sm:mb-6">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-[#236640] text-[#F5FAF6] text-[10px] sm:text-xs font-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full mb-2 sm:mb-3 shadow-[0_4px_16px_rgba(35,102,64,0.30)]">
-              <svg className="w-3.5 h-3.5 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-              </svg>
-              <span>SEASON 8 – 2026</span>
-            </div>
-
-            <h1 className="font-display text-2xl sm:text-4xl text-[#236640] leading-tight mb-0.5 sm:mb-1 drop-shadow-sm font-black">
-              Cuộc Đua Kỳ Thú
+          <header className="text-center mb-3 sm:mb-6 pt-1 sm:pt-2">
+            <h1 className="font-display text-2xl sm:text-4xl text-[#236640] leading-tight mb-2.5 sm:mb-4 drop-shadow-sm font-black">
+              Cuộc Đua Kỳ Thú 2026
             </h1>
-            <p className="text-[10px] sm:text-xs font-bold tracking-[0.2em] text-[rgba(15,43,26,0.65)] uppercase mb-3 sm:mb-5">
-              The Amazing Race – Season 8
-            </p>
 
-            <div className="bg-[#236640] text-[#F5FAF6] rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 sm:py-3.5 shadow-[0_6px_24px_rgba(35,102,64,0.30)] mb-1">
-              <h2 className="text-sm sm:text-xl font-black tracking-wide uppercase">
-                NỘP MINH CHỨNG CHECK IN
-              </h2>
+            <div className="flex justify-center mb-1.5 sm:mb-3 px-2">
+              <img
+                src="/banner_checkin.png"
+                alt="Nộp Minh Chứng Check In"
+                className="w-full max-w-[340px] sm:max-w-[420px] h-auto drop-shadow-[0_4px_12px_rgba(35,102,64,0.25)] select-none pointer-events-none"
+              />
             </div>
           </header>
 
@@ -115,21 +100,21 @@ const SelectTeamPage = () => {
             )}
           </div>
 
-          {/* Nút tiếp tục */}
-          <div className="sticky bottom-3 sm:bottom-4 mt-2 sm:mt-4">
+          {/* Nút tiếp tục - thu nhỏ và căn giữa như ảnh 2 */}
+          <div className="sticky bottom-3 sm:bottom-4 mt-2 sm:mt-4 flex justify-center">
             <button
               id="btn-continue"
               onClick={handleContinue}
               disabled={!selectedTeam}
               className={`
-                w-full py-3 sm:py-4 rounded-full font-black text-sm sm:text-base tracking-wide transition-all duration-200
+                w-auto min-w-[190px] sm:min-w-[220px] px-8 py-2.5 sm:py-3 rounded-full font-black text-sm sm:text-base tracking-wider transition-all duration-200 shadow-md
                 ${selectedTeam
-                  ? 'bg-[#236640] text-[#F5FAF6] shadow-[0_6px_24px_rgba(35,102,64,0.40)] hover:bg-[#1A4D30] hover:scale-[1.01] active:scale-100'
+                  ? 'bg-[#154c2e] text-white shadow-[0_4px_16px_rgba(21,76,46,0.35)] hover:bg-[#0f3822] hover:scale-105 active:scale-95'
                   : 'bg-[rgba(35,102,64,0.18)] text-[rgba(35,102,64,0.45)] cursor-not-allowed'
                 }
               `}
             >
-              {selectedTeam ? `${selectedTeam.name} — Tiếp tục →` : 'Chọn team để tiếp tục'}
+              {selectedTeam ? `TIẾP THEO` : 'Chọn team'}
             </button>
           </div>
         </div>

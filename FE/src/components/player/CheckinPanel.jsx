@@ -101,111 +101,147 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
 
       {/* Panel */}
       <div className="fixed bottom-0 left-0 right-0 z-50 panel-slide-up">
-        <div className="bg-[#F5FAF6] rounded-t-3xl shadow-[0_-8px_40px_rgba(0,0,0,0.25)] max-h-[85vh] overflow-y-auto max-w-lg mx-auto border-t border-white/40">
+        <div className="bg-[#FAFDFB] rounded-t-[32px] shadow-[0_-12px_48px_rgba(0,0,0,0.22)] max-h-[85vh] overflow-y-auto max-w-lg mx-auto border-t border-white/60">
+          {/* Handle thanh kéo trên cùng */}
           <div className="flex justify-center pt-3 pb-1">
-            <div className="w-10 h-1 rounded-full bg-[#236640]/20" />
+            <div className="w-12 h-1 rounded-full bg-gray-300/80" />
           </div>
 
-          <div className="px-5 pb-8 pt-2">
-            {/* Header */}
-            <div className="flex items-start gap-3 mb-4">
-              <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-[#236640] flex items-center justify-center font-black text-lg text-white shadow-sm">
+          <div className="px-5 pb-7 pt-2">
+            {/* Header thanh lịch */}
+            <div className="flex items-center gap-3.5 mb-5 pb-3.5 border-b border-gray-100">
+              <div className="flex-shrink-0 w-11 h-11 rounded-2xl bg-gradient-to-br from-[#1e633d] to-[#0f3d24] flex items-center justify-center font-black text-lg text-white shadow-[0_4px_12px_rgba(30,99,61,0.28)] border border-emerald-400/20">
                 {location.index}
               </div>
-              <div className="flex-1">
-                <h2 className="text-base sm:text-lg font-black text-[#236640] leading-tight">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-base sm:text-lg font-black text-[#0f3d24] leading-tight truncate">
                   {location.title || `Điểm ${location.index}`}
                 </h2>
-                <p className="text-xs text-gray-500 mt-0.5 font-medium">Đội check-in: {teamName}</p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="text-xs text-gray-500 font-medium">Đội check-in:</span>
+                  <span className="text-xs font-bold text-[#1e633d] bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                    {teamName}
+                  </span>
+                </div>
               </div>
               <button
                 onClick={onClose}
-                className="flex-shrink-0 w-8 h-8 rounded-full bg-[#236640]/10 flex items-center justify-center text-[#236640] hover:bg-[#236640]/20 transition-colors"
+                className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 flex items-center justify-center transition-colors"
+                aria-label="Đóng"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            {/* Mô tả nhiệm vụ */}
+            {/* Mô tả nhiệm vụ - phong cách tối giản sang trọng */}
             {location.description && (
-              <div className="bg-[#236640]/8 rounded-xl p-3.5 mb-5 border border-[#236640]/15">
-                <p className="text-xs sm:text-sm font-medium text-[#0F2B1A] leading-relaxed">
-                  {location.description}
+              <div className="mb-5">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1e633d]" />
+                  <p className="text-[11px] font-extrabold text-[#1e633d] uppercase tracking-wider">
+                    NỘI DUNG CHECK IN:
+                  </p>
+                </div>
+                <div className="bg-white rounded-2xl p-4 border border-emerald-900/10 border-l-4 border-l-[#1e633d] shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
+                  <p className="text-xs sm:text-sm font-medium text-gray-800 leading-relaxed">
+                    {location.description}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Khu vực ảnh minh chứng */}
+            <div className="mb-5">
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1e633d]" />
+                <p className="text-[11px] font-extrabold text-[#1e633d] uppercase tracking-wider">
+                  ẢNH MINH CHỨNG
                 </p>
               </div>
-            )}
 
-            <div className="h-px bg-[#236640]/10 mb-4" />
-            <p className="text-xs sm:text-sm font-bold text-[#236640] uppercase tracking-wider mb-2.5">
-              Ảnh minh chứng
-            </p>
-
-            {imagePreview ? (
-              <div className="relative rounded-2xl overflow-hidden mb-4 aspect-video bg-black/90 shadow-sm border border-gray-200">
-                <img src={imagePreview} alt="Ảnh minh chứng" className="w-full h-full object-cover" />
-                <button
-                  onClick={() => {
-                    setImageFile(null);
-                    setImagePreview(null);
-                  }}
-                  className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/70 text-white flex items-center justify-center hover:bg-black transition-colors"
+              {imagePreview ? (
+                <div className="relative rounded-2xl overflow-hidden aspect-video bg-black shadow-md border border-gray-200">
+                  <img src={imagePreview} alt="Ảnh minh chứng" className="w-full h-full object-cover" />
+                  <button
+                    onClick={() => {
+                      setImageFile(null);
+                      setImagePreview(null);
+                    }}
+                    className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/60 backdrop-blur-xs text-white flex items-center justify-center hover:bg-black transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`
+                    border border-dashed rounded-2xl p-6
+                    flex flex-col items-center justify-center gap-2.5
+                    cursor-pointer transition-all duration-200 group bg-white shadow-[0_2px_10px_rgba(0,0,0,0.03)]
+                    ${isDragging
+                      ? 'border-[#1e633d] bg-emerald-50/50 scale-[0.99]'
+                      : 'border-emerald-900/20 hover:border-[#1e633d] hover:bg-emerald-50/30'
+                    }
+                  `}
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            ) : (
-              <div
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                className={`
-                  border-2 border-dashed rounded-2xl p-7
-                  flex flex-col items-center justify-center gap-3
-                  cursor-pointer transition-all duration-200 mb-4 bg-white/70
-                  ${isDragging
-                    ? 'border-[#236640] bg-[#236640]/8'
-                    : 'border-[#236640]/25 hover:border-[#236640] hover:bg-white'
-                  }
-                `}
-              >
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#236640]">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                    />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 group-hover:bg-emerald-100/70 border border-emerald-100 flex items-center justify-center text-[#1e633d] transition-all group-hover:scale-105 shadow-xs">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                      />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-bold text-[#0f3d24] text-sm group-hover:text-[#1e633d] transition-colors">
+                      Chụp ảnh hoặc chọn từ thư viện
+                    </p>
+                    <p className="text-[11px] text-gray-400 font-medium mt-0.5">
+                      Chạm để tải lên ảnh check-in
+                    </p>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="font-bold text-[#236640] text-sm">Chụp ảnh hoặc chọn từ thư viện</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Hỗ trợ JPG, PNG, WEBP — tự động nén</p>
-                </div>
-              </div>
-            )}
+              )}
 
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => handleFileChange(e.target.files[0])}
-            />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleFileChange(e.target.files[0])}
+              />
+            </div>
 
-            <Button
+            {/* Nút nộp minh chứng */}
+            <button
               onClick={handleSubmit}
-              loading={loading}
-              disabled={!imageFile}
-              className="w-full text-sm sm:text-base py-3.5 rounded-xl"
+              disabled={!imageFile || loading}
+              className={`
+                w-full py-3.5 rounded-2xl font-black text-sm sm:text-base tracking-wide transition-all duration-200 flex items-center justify-center gap-2
+                ${!imageFile || loading
+                  ? 'bg-gray-200/90 text-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-[#175233] to-[#0f3d24] text-white shadow-[0_6px_20px_rgba(23,82,51,0.30)] hover:shadow-[0_8px_26px_rgba(23,82,51,0.40)] hover:scale-[1.01] active:scale-[0.99] cursor-pointer'
+                }
+              `}
             >
-              {loading && loadingStep ? loadingStep : 'Nộp minh chứng check-in'}
-            </Button>
+              {loading && (
+                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+              )}
+              <span>{loading && loadingStep ? loadingStep : 'Nộp minh chứng check-in'}</span>
+            </button>
           </div>
         </div>
       </div>

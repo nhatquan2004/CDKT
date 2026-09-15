@@ -82,42 +82,50 @@ const MapCheckinPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F5FAF6]">
-      {/* Header */}
-      <header className="bg-[#236640] text-[#F5FAF6] px-4 py-3 shadow-[0_4px_16px_rgba(35,102,64,0.35)] z-30 flex-shrink-0">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="font-black text-base leading-tight flex items-center gap-1.5">
-              <svg className="w-4 h-4 text-emerald-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-              <span>Bản Đồ Check-in</span>
+      {/* Header sang trọng & cao cấp */}
+      <header className="bg-gradient-to-r from-[#0d2a19] via-[#143e26] to-[#0d2a19] text-[#F5FAF6] px-3.5 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.30)] z-30 flex-shrink-0 border-b border-emerald-900/40">
+        <div className="max-w-lg mx-auto flex items-center justify-between gap-2">
+          {/* Nút Quay lại bên trái */}
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-xs font-semibold text-emerald-100 border border-white/15 backdrop-blur-sm shadow-xs"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            <span>Quay lại</span>
+          </button>
+
+          {/* Tiêu đề trung tâm */}
+          <div className="text-center flex-1 px-1">
+            <h1 className="font-black text-sm sm:text-base leading-tight tracking-wide text-white uppercase drop-shadow-sm">
+              Bản Đồ Check-in
             </h1>
-            <p className="text-xs text-[rgba(245,250,246,0.70)] font-medium">Cuộc Đua Kỳ Thú 2026</p>
+            <p className="text-[10px] text-emerald-300/80 font-semibold tracking-wider uppercase mt-0.5">
+              Cuộc Đua Kỳ Thú 2026
+            </p>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="bg-[rgba(245,250,246,0.18)] border border-[rgba(245,250,246,0.28)] rounded-full px-3 py-1.5 flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-[#C8A951] animate-pulse" />
-              <span className="font-black text-xs">{teamName}</span>
-            </div>
-            <button
-              onClick={() => navigate('/')}
-              className="text-xs text-[rgba(245,250,246,0.65)] hover:text-white underline font-medium"
-            >
-              Đổi team
-            </button>
+
+          {/* Badge Team sang trọng bên phải */}
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-[#C8A951]/25 to-[#E5C97A]/25 border border-[#C8A951]/60 shadow-[0_2px_8px_rgba(200,169,81,0.2)] backdrop-blur-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C8A951] shadow-[0_0_8px_#C8A951] animate-pulse" />
+            <span className="font-black text-xs text-amber-100 tracking-wider uppercase">{teamName}</span>
           </div>
         </div>
       </header>
 
-      {/* Tiến độ */}
-      <div className="bg-[rgba(35,102,64,0.06)] border-b border-[rgba(35,102,64,0.10)] px-4 py-2 flex-shrink-0">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
-          <p className="text-xs font-bold text-[#0F2B1A]">
-            Đã check-in: {completedLocations.size}/{locations.length} điểm
-          </p>
-          <div className="w-32 h-2 bg-[rgba(35,102,64,0.12)] rounded-full overflow-hidden">
+      {/* Thanh tiến độ đồng bộ phong cách cao cấp */}
+      <div className="bg-[#0b2415] border-b border-emerald-950 px-4 py-2 flex-shrink-0 shadow-inner">
+        <div className="max-w-lg mx-auto flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-bold text-emerald-200/80 uppercase tracking-wider">Tiến độ</span>
+            <span className="text-xs font-black text-[#C8A951] bg-[#C8A951]/15 px-2 py-0.5 rounded-md border border-[#C8A951]/30">
+              {completedLocations.size}/{locations.length} điểm
+            </span>
+          </div>
+          <div className="flex-1 max-w-[130px] sm:max-w-[160px] h-2 bg-black/50 rounded-full overflow-hidden p-0.5 border border-white/10">
             <div
-              className="h-full bg-[#C8A951] rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-[#C8A951] to-[#f3dfa2] rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(200,169,81,0.6)]"
               style={{ width: `${(completedLocations.size / (locations.length || 1)) * 100}%` }}
             />
           </div>
@@ -151,7 +159,7 @@ const MapCheckinPage = () => {
                 </svg>
               </div>
               <p className="text-sm font-medium text-[#0F2B1A] leading-relaxed">
-                <strong>Bấm vào các pin màu vàng</strong> trên bản đồ để xem nhiệm vụ và nộp minh chứng check-in!
+                <strong>HÃY BẤM VÀO ĐIỂM CHECK IN</strong> TRÊN MAP ĐỂ NHẬN THÔNG TIN VỀ ĐIỂM CHECK IN!
               </p>
             </div>
             <div className="flex items-center gap-6 mt-4 justify-center">
