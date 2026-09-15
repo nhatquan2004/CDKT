@@ -196,7 +196,6 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
               accept="image/*"
               className="hidden"
               onChange={(e) => handleFileChange(e.target.files[0])}
-              capture="environment"
             />
 
             <Button
