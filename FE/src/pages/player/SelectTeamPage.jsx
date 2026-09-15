@@ -38,56 +38,42 @@ const SelectTeamPage = () => {
         - Trên mobile: co giãn tự động 100%, chữ & nút thu nhỏ đồng bộ
       */}
       <div
-        className="w-full max-w-2xl min-h-screen sm:min-h-[92vh] relative flex flex-col justify-between px-3.5 sm:px-8 py-5 sm:py-8 bg-cover bg-center bg-no-repeat shadow-sm transition-all duration-300"
+        className="w-full max-w-2xl min-h-screen sm:min-h-[92vh] relative flex flex-col px-3.5 sm:px-8 pb-6 bg-cover bg-center bg-no-repeat shadow-sm transition-all duration-300"
         style={{
           backgroundImage: `url('${POSTER_BG}')`,
         }}
       >
 
-        {/* Nội dung bên trong khung - co giãn kích thước theo màn hình */}
-        <div className="relative z-10 flex flex-col justify-between flex-1 h-full">
-          {/* Header */}
-          <header className="text-center mb-3 sm:mb-6 pt-1 sm:pt-2">
-            <h1 className="font-display text-2xl sm:text-4xl text-[#236640] leading-tight mb-2.5 sm:mb-4 drop-shadow-sm font-black">
-              Cuộc Đua Kỳ Thú 2026
-            </h1>
+        {/* Toàn bộ nội dung đẩy xuống bên dưới biển gỗ READY? */}
+        <div className="relative z-10 flex flex-col items-center gap-2 sm:gap-3" style={{ marginTop: '25%' }}>
 
-            <div className="flex justify-center mb-1.5 sm:mb-3 px-2">
-              <img
-                src="/banner_checkin.png"
-                alt="Nộp Minh Chứng Check In"
-                className="w-full max-w-[340px] sm:max-w-[420px] h-auto drop-shadow-[0_4px_12px_rgba(35,102,64,0.25)] select-none pointer-events-none"
-              />
-            </div>
-          </header>
+          {/* Tiêu đề RẤT nhỏ — chỉ để nhận diện, không cạnh tranh với banner */}
+          <h1 className="font-body font-semibold text-[11px] sm:text-xs text-[#144728]/80 tracking-[0.25em] uppercase text-center">
+            CUỘC ĐUA KỲ THÚ 2026
+          </h1>
 
-          <p className="text-center font-black text-[#0F2B1A] text-xs sm:text-base tracking-widest mb-2 sm:mb-4 uppercase drop-shadow-sm">
-            HÃY CHỌN TEAM CỦA BẠN
-          </p>
+          {/* Banner vệt sơn — to rõ, căn giữa, là điểm nhấn chính */}
+          <img
+            src="/banner_checkin.png"
+            alt="Nộp Minh Chứng Check In"
+            className="w-full max-w-[280px] sm:max-w-[360px] h-auto drop-shadow-[0_4px_16px_rgba(35,102,64,0.30)] select-none pointer-events-none"
+          />
 
-          {/* Grid danh sách 10 Teams - tự co giãn theo điện thoại */}
-          <div className="flex-1 my-1 sm:my-2">
+          {/* Grid 10 Team */}
+          <div className="w-full">
             {teamsLoading ? (
-              <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-2 sm:mb-4">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 {Array.from({ length: 10 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-12 sm:h-14 rounded-2xl bg-[#236640]/10 animate-pulse"
-                  />
+                  <div key={i} className="h-12 sm:h-14 rounded-2xl bg-[#236640]/10 animate-pulse" />
                 ))}
               </div>
             ) : teams.length === 0 ? (
-              <div className="bg-white/90 border border-red-300 rounded-2xl p-4 sm:p-6 text-center shadow-md">
+              <div className="bg-white/90 border border-red-300 rounded-2xl p-4 text-center shadow-md">
                 <p className="text-red-700 font-bold text-xs sm:text-sm">Không thể tải danh sách team. Vui lòng thử lại!</p>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="mt-2 text-xs sm:text-sm underline text-[#236640] font-bold"
-                >
-                  Thử lại
-                </button>
+                <button onClick={() => window.location.reload()} className="mt-2 text-xs underline text-[#236640] font-bold">Thử lại</button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-2 sm:mb-4">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 {teams.map((team) => (
                   <TeamButton
                     key={team._id}
@@ -100,23 +86,24 @@ const SelectTeamPage = () => {
             )}
           </div>
 
-          {/* Nút tiếp tục - thu nhỏ và căn giữa như ảnh 2 */}
-          <div className="sticky bottom-3 sm:bottom-4 mt-2 sm:mt-4 flex justify-center">
+          {/* Nút TIẾP THEO — cách team một khoảng hợp lý */}
+          <div className="flex justify-center pt-4 sm:pt-5">
             <button
               id="btn-continue"
               onClick={handleContinue}
               disabled={!selectedTeam}
               className={`
-                w-auto min-w-[190px] sm:min-w-[220px] px-8 py-2.5 sm:py-3 rounded-full font-black text-sm sm:text-base tracking-wider transition-all duration-200 shadow-md
+                min-w-[180px] sm:min-w-[210px] px-8 py-2.5 sm:py-3 rounded-full font-black text-sm tracking-wider transition-all duration-200 shadow-md
                 ${selectedTeam
                   ? 'bg-[#154c2e] text-white shadow-[0_4px_16px_rgba(21,76,46,0.35)] hover:bg-[#0f3822] hover:scale-105 active:scale-95'
                   : 'bg-[rgba(35,102,64,0.18)] text-[rgba(35,102,64,0.45)] cursor-not-allowed'
                 }
               `}
             >
-              {selectedTeam ? `TIẾP THEO` : 'Chọn team'}
+              {selectedTeam ? 'TIẾP THEO' : 'Chọn team'}
             </button>
           </div>
+
         </div>
       </div>
     </div>
