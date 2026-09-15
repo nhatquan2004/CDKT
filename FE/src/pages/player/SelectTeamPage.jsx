@@ -44,8 +44,8 @@ const SelectTeamPage = () => {
         }}
       >
 
-        {/* Toàn bộ nội dung đẩy xuống bên dưới biển gỗ READY? */}
-        <div className="relative z-10 flex flex-col items-center gap-2 sm:gap-3" style={{ marginTop: '25%' }}>
+        {/* Toàn bộ nội dung đẩy lên gần chạm biển gỗ READY? và không che cờ Chợ Bến Thành */}
+        <div className="relative z-10 flex flex-col items-center gap-2 sm:gap-3" style={{ marginTop: '17%' }}>
 
           {/* Tiêu đề RẤT nhỏ — chỉ để nhận diện, không cạnh tranh với banner */}
           <h1 className="font-body font-semibold text-[11px] sm:text-xs text-[#144728]/80 tracking-[0.25em] uppercase text-center">
