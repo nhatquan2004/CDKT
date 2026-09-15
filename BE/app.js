@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 
 const connectDB = require('./src/config/db');
 const teamRoutes = require('./src/routes/team.routes');
@@ -12,6 +11,10 @@ const cloudinaryRoutes = require('./src/routes/cloudinary.routes');
 const seedData = require('./src/seed');
 
 const app = express();
+
+// ⚡ Health check — route đầu tiên, không qua middleware nào, không query DB
+// UptimeRobot ping mỗi 5 phút để giữ Render không sleep
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 // Kết nối MongoDB
 connectDB().then(() => {
@@ -31,7 +34,6 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 // API Routes
 app.use('/api/teams', teamRoutes);
 app.use('/api/locations', locationRoutes);
@@ -39,9 +41,5 @@ app.use('/api/submissions', submissionRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/cloudinary', cloudinaryRoutes);
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Cuộc Đua Kỳ Thú 2026 Backend đang chạy! 🏁' });
-});
-
 module.exports = app;
+

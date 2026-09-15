@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import imageCompression from 'browser-image-compression';
 import Button from '../common/Button';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
@@ -8,6 +9,7 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState('');
   const fileInputRef = useRef(null);
 
   const handleFileChange = (file) => {
@@ -45,12 +47,23 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
 
     setLoading(true);
     try {
-      // Bước 1: Xin chữ ký từ backend
+      // Bước 1: Nén ảnh — giảm từ 3-5MB xuống ≤1MB, giúp upload nhanh trên mạng di động
+      setLoadingStep('Đang nén ảnh...');
+      const compressed = await imageCompression(imageFile, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+        initialQuality: 0.8,
+      });
+
+      // Bước 2: Xin chữ ký từ backend (cực nhanh, chỉ trả vài field text)
+      setLoadingStep('Đang chuẩn bị tải lên...');
       const { data: sigData } = await api.post('/cloudinary/signature');
 
-      // Bước 2: Upload ảnh thẳng lên Cloudinary (không qua Railway)
+      // Bước 3: Upload thẳng lên Cloudinary — bỏ qua Render hoàn toàn
+      setLoadingStep('Đang tải ảnh lên Cloudinary...');
       const uploadForm = new FormData();
-      uploadForm.append('file', imageFile);
+      uploadForm.append('file', compressed);
       uploadForm.append('api_key', sigData.apiKey);
       uploadForm.append('timestamp', sigData.timestamp);
       uploadForm.append('signature', sigData.signature);
@@ -63,7 +76,8 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
       if (!uploadRes.ok) throw new Error('Upload ảnh thất bại');
       const { secure_url: imageUrl } = await uploadRes.json();
 
-      // Bước 3: Gửi URL về backend để lưu submission
+      // Bước 4: Gửi URL về backend để lưu submission (chỉ gửi text, cực nhẹ)
+      setLoadingStep('Đang lưu minh chứng...');
       await api.post('/submissions', {
         teamId,
         locationId: location._id,
@@ -77,6 +91,7 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
       toast.error(error.response?.data?.message || 'Có lỗi xảy ra. Vui lòng thử lại!');
     } finally {
       setLoading(false);
+      setLoadingStep('');
     }
   };
 
@@ -171,7 +186,7 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
                 </div>
                 <div className="text-center">
                   <p className="font-bold text-[#236640] text-sm">Chụp ảnh hoặc chọn từ thư viện</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Hỗ trợ JPG, PNG, WEBP</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Hỗ trợ JPG, PNG, WEBP — tự động nén</p>
                 </div>
               </div>
             )}
@@ -191,7 +206,7 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
               disabled={!imageFile}
               className="w-full text-sm sm:text-base py-3.5 rounded-xl"
             >
-              Nộp minh chứng check-in
+              {loading && loadingStep ? loadingStep : 'Nộp minh chứng check-in'}
             </Button>
           </div>
         </div>

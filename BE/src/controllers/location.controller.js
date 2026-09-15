@@ -1,10 +1,15 @@
 const Location = require('../models/Location');
 
+// Cache in-memory — 6 điểm cố định, chỉ invalidate khi admin cập nhật
+let locationsCache = null;
+
 // Lấy danh sách tất cả 6 điểm check-in
 const getLocations = async (req, res) => {
   try {
-    const locations = await Location.find().sort({ index: 1 });
-    res.json(locations);
+    if (!locationsCache) {
+      locationsCache = await Location.find().sort({ index: 1 }).lean();
+    }
+    res.json(locationsCache);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server khi lấy danh sách điểm.' });
   }
@@ -26,6 +31,9 @@ const updateLocation = async (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy điểm check-in.' });
     }
 
+    // Invalidate cache — lần GET tiếp theo sẽ load lại từ DB
+    locationsCache = null;
+
     res.json({ message: 'Cập nhật điểm thành công!', location });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server khi cập nhật điểm.' });
@@ -33,3 +41,4 @@ const updateLocation = async (req, res) => {
 };
 
 module.exports = { getLocations, updateLocation };
+
