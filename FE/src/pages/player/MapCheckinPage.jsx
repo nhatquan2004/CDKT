@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MapPin from '../../components/player/MapPin';
 import CheckinPanel from '../../components/player/CheckinPanel';
@@ -15,29 +15,60 @@ const MapCheckinPage = () => {
   const teamId = localStorage.getItem('selectedTeamId');
   const teamName = localStorage.getItem('selectedTeamName');
 
+  // Fetch completed locations từ server — source of truth thay vì localStorage
+  const fetchCompleted = useCallback(async () => {
+    if (!teamId) return;
+    try {
+      const { data } = await api.get(`/submissions/my/${teamId}`);
+      setCompletedLocations(new Set(data)); // data = mảng locationId strings
+    } catch (err) {
+      console.error('Lỗi sync completed locations:', err);
+    }
+  }, [teamId]);
+
   useEffect(() => {
     if (!teamId) { navigate('/', { replace: true }); return; }
 
-    const fetchLocations = async () => {
+    // Fetch locations và completed state song song
+    const fetchAll = async () => {
       try {
-        const { data } = await api.get('/locations');
-        setLocations(data);
+        const [locRes] = await Promise.all([
+          api.get('/locations'),
+          fetchCompleted(),
+        ]);
+        setLocations(locRes.data);
       } catch (err) {
-        console.error('Lỗi tải locations:', err);
+        console.error('Lỗi tải dữ liệu:', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchLocations();
+    fetchAll();
 
-    const savedCompleted = localStorage.getItem(`completed_${teamId}`);
-    if (savedCompleted) setCompletedLocations(new Set(JSON.parse(savedCompleted)));
-  }, [teamId, navigate]);
+    // Auto-refresh completed state mỗi 10s — đảm bảo đồng bộ với server
+    const intervalId = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchCompleted();
+      }
+    }, 10000);
 
-  const handleCheckinSuccess = (locationId) => {
-    const updated = new Set([...completedLocations, locationId]);
-    setCompletedLocations(updated);
-    localStorage.setItem(`completed_${teamId}`, JSON.stringify([...updated]));
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') fetchCompleted();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [teamId, navigate, fetchCompleted]);
+
+  // Sau khi nộp thành công: cập nhật state ngay + đồng bộ lại từ server
+  const handleCheckinSuccess = async (locationId) => {
+    // Cập nhật UI tức thì (optimistic update)
+    setCompletedLocations((prev) => new Set([...prev, locationId]));
+    // Sau đó đồng bộ lại từ server để đảm bảo chính xác
+    await fetchCompleted();
   };
 
   if (loading) {

@@ -8,8 +8,13 @@ let teamsCache = null;
 const getTeams = async (req, res) => {
   try {
     if (!teamsCache) {
-      // Lần đầu: query DB, .lean() trả về plain object thay vì Mongoose document
-      teamsCache = await Team.find().sort({ name: 1 }).lean();
+      const raw = await Team.find().lean();
+      // Sort theo số trong tên: "Team 2" trước "Team 10" (tránh sort chữ cái)
+      teamsCache = raw.sort((a, b) => {
+        const numA = parseInt(a.name.replace(/\D/g, ''), 10) || 0;
+        const numB = parseInt(b.name.replace(/\D/g, ''), 10) || 0;
+        return numA - numB;
+      });
     }
     res.json(teamsCache);
   } catch (error) {

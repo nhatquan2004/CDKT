@@ -61,4 +61,16 @@ const getSubmissions = async (req, res) => {
   }
 };
 
-module.exports = { createSubmission, getSubmissions };
+// Lấy danh sách locationId đã check-in của 1 team (public — không cần auth)
+const getMySubmissions = async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    const submissions = await Submission.find({ team: teamId }, 'location').lean();
+    const locationIds = submissions.map((s) => s.location.toString());
+    res.json(locationIds);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi server.' });
+  }
+};
+
+module.exports = { createSubmission, getSubmissions, getMySubmissions };
