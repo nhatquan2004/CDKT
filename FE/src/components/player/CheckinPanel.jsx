@@ -47,18 +47,17 @@ const CheckinPanel = ({ location, teamId, teamName, onClose, onSuccess }) => {
 
     setLoading(true);
     try {
-      // Bước 1: Nén ảnh — giảm từ 3-5MB xuống ≤1MB, giúp upload nhanh trên mạng di động
-      setLoadingStep('Đang nén ảnh...');
-      const compressed = await imageCompression(imageFile, {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
+      // Tối ưu tốc độ: Vừa nén ảnh trên máy vừa xin chữ ký từ BE cùng một lúc (song song)
+      setLoadingStep('Đang chuẩn bị ảnh...');
+      const compressPromise = imageCompression(imageFile, {
+        maxSizeMB: 0.6,
+        maxWidthOrHeight: 1600, // Chuẩn 1600px cực kỳ sắc nét cho BTC xem mà file chỉ ~300-500KB
         useWebWorker: true,
         initialQuality: 0.8,
       });
+      const sigPromise = api.post('/cloudinary/signature');
 
-      // Bước 2: Xin chữ ký từ backend (cực nhanh, chỉ trả vài field text)
-      setLoadingStep('Đang chuẩn bị tải lên...');
-      const { data: sigData } = await api.post('/cloudinary/signature');
+      const [compressed, { data: sigData }] = await Promise.all([compressPromise, sigPromise]);
 
       // Bước 3: Upload thẳng lên Cloudinary — bỏ qua Render hoàn toàn
       setLoadingStep('Đang tải ảnh lên Cloudinary...');
